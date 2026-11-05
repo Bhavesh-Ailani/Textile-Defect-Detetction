@@ -22,7 +22,7 @@ The dataset is not included in this repository. The notebook downloads it with `
 - Patch filenames follow `<image_id>_patch<row>-<col>.png`. Every source image contributes defect-free patches to `good` and defect patches to one defect class.
 - Source images `191` and `203` are byte-identical, so `203` is excluded. This leaves 399 source images.
 
-![Sample patches](figures/samples.png)
+
 
 ## Approach
 
