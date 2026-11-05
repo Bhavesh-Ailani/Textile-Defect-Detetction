@@ -69,7 +69,6 @@ Test set (564 patches from 40 unseen source images):
 - **Accuracy:** 0.727. A majority-class baseline (always predicting `good`) scores 0.528.
 - **Macro F1:** 0.609.
 
-![Confusion matrix](figures/confusion_matrix.png)
 
 **Observations**
 - False alarms are rare: 285 of 298 good patches are classified correctly, and most of the rest are predicted as oil spots (10).
@@ -79,7 +78,7 @@ Test set (564 patches from 40 unseen source images):
 - Training ran the full 40 epochs. The weights from epoch 35 (lowest validation loss) were restored.
 - Validation scores fluctuate strongly between epochs, especially early on. Training accuracy stays below validation accuracy because dropout, augmentation and class weighting apply only during training.
 
-![Training history](figures/training_history.png)
+
 
 ## Limitations
 
