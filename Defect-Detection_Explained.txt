@@ -1,0 +1,46 @@
+The Textile Defect Detection project, explained
+
+The goal
+A factory wants to spot faults in fabric automatically. The model looks at a small square of fabric and decides which of 5 categories it belongs to:
+
+good (no defect)
+hole
+objects (foreign material stuck in the fabric)
+oil spot
+thread error (a broken or misaligned thread)
+
+The data
+
+The dataset is TILDA, a public textile image database on Kaggle.
+It contains 400 large photos of fabric. Each photo is cut into an 8×8 grid of small tiles (“patches”) of 64×64 pixels, giving 25,600 patches.
+One duplicate photo was removed. After balancing (explained below), 5,428 patches were used.
+
+Bullet 1: the model and the split
+
+CNN (convolutional neural network): the standard type of model for images. It learns visual patterns on its own, starting with edges and textures and building up to shapes.
+“4-block”: the image passes through 4 stages, each detecting more complex patterns than the last.
+1.47M parameters: the number of values the model adjusts while it learns. That’s small by deep-learning standards.
+TensorFlow/Keras: the Python library used to build and train it.
+“Split by source image to prevent data leakage”: this is the most important design choice.
+Patches cut from the same photo look very similar. If some went into training and others into testing, the model would be tested on fabric it had effectively already seen, and the scores would look better than they really are.
+So whole photos were assigned to one group: 287 for training, 72 for validation (tuning during training) and 40 for the final test.
+Your README notes that an earlier version made exactly this mistake, and its inflated scores were discarded. Showing that you know this pitfall is a strong signal to research labs.
+
+Bullet 2: class imbalance and results
+
+The problem: about 23,000 patches are “good” but only 337 are “hole”. A lazy model could predict “good” every time and still look accurate.
+The fixes:
+Undersampling: only 3,000 “good” patches were kept.
+Class weights: a mistake on a rare class counts more during training, so the model can’t ignore it.
+Augmentation: training patches were randomly flipped, rotated and slightly brightened or darkened, so the model sees more variety and doesn’t simply memorise the training images.
+The results on the 40 photos the model never saw:
+0.73 accuracy: 73% of patches classified correctly.
+0.53 baseline: always guessing “good” would already score 53%. Comparing against this shows the model genuinely learned something.
+0.61 macro F1: the F1 score is calculated for each class and then averaged, so rare classes count equally. This is the more honest measure when classes are imbalanced.
+
+Weaknesses to know before an interview
+
+The model rarely raises a false alarm on good fabric. Its main failure is missing defects: 29% of defective patches were classified as “good”.
+Thread errors are the hardest class: only 37% are caught. Holes are the easiest.
+The test set has only 40 photos, so the scores are uncertain. A second run of the same notebook gave 0.67 accuracy.
+The model is supervised: it can only recognise the defect types it was trained on, not new kinds of defect.
